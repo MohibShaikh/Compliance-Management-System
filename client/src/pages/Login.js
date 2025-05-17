@@ -11,6 +11,7 @@ import {
   CircularProgress
 } from '@mui/material';
 import { Lock as LockIcon } from '@mui/icons-material';
+import { trackAuthEvent, trackUserAction } from '../services/mixpanel';
 
 const Login = ({ onLogin }) => {
   const [formData, setFormData] = useState({
@@ -27,6 +28,8 @@ const Login = ({ onLogin }) => {
       ...prev,
       [name]: value
     }));
+    // Track input changes
+    trackUserAction('Login Input Change', { field: name });
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
@@ -60,16 +63,31 @@ const Login = ({ onLogin }) => {
     setLoginError('');
 
     try {
+      // Track login attempt
+      trackAuthEvent('Login Attempt', { email: formData.email });
+      
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // For demo purposes, accept any valid email/password
       if (formData.email && formData.password) {
+        // Track successful login
+        trackAuthEvent('Login Success', { email: formData.email });
         onLogin();
       } else {
+        // Track failed login
+        trackAuthEvent('Login Failed', { 
+          email: formData.email,
+          reason: 'Invalid credentials'
+        });
         setLoginError('Invalid email or password');
       }
     } catch (error) {
+      // Track login error
+      trackAuthEvent('Login Error', { 
+        email: formData.email,
+        error: error.message
+      });
       setLoginError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -156,12 +174,20 @@ const Login = ({ onLogin }) => {
 
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link 
+                href="#" 
+                variant="body2"
+                onClick={() => trackUserAction('Forgot Password Click')}
+              >
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link 
+                href="#" 
+                variant="body2"
+                onClick={() => trackUserAction('Help Click')}
+              >
                 Need help?
               </Link>
             </Grid>
