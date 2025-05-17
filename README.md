@@ -1,130 +1,127 @@
 # Compliance Management System
 
-A comprehensive compliance management system for e-commerce platforms in Pakistan, specifically designed for Karachi-based operations.
+A comprehensive compliance management system built with React and Node.js.
 
 ## Features
 
-- Compliance tracking and management
-- Document management
-- Reporting and analytics
-- User authentication and authorization
-- Real-time notifications
-- Multi-organization support
+### Authentication
+- User registration with email and password
+- Secure login system
+- Password validation and security checks
+- Terms of Service and Privacy Policy acceptance
+- Session management
 
-## Tech Stack
+### Terms and Privacy
+- Interactive Terms of Service and Privacy Policy pages
+- Terms preview dialog with enhanced navigation:
+  - Table of contents with quick section navigation
+  - Search functionality
+  - Scroll to top button
+  - Toggle table of contents visibility
+  - Smooth scrolling to sections
+- Detailed terms acceptance tracking
+- Analytics integration for terms interactions
 
-- Frontend: React with Material-UI
-- Backend: Node.js with Express
-- Database: MongoDB
-- Authentication: JWT
-- File Storage: Local/Cloud Storage
+### User Interface
+- Modern Material-UI based design
+- Responsive layout
+- Intuitive navigation
+- Loading states and error handling
+- Form validation with clear error messages
 
-## Prerequisites
+### Analytics Integration
+- Mixpanel integration for tracking:
+  - User registration and login events
+  - Terms acceptance and interactions
+  - Page views and navigation
+  - Form interactions
+  - Error tracking
+  - User actions and behaviors
 
+### Security
+- Secure password handling
+- Terms of Service enforcement
+- Privacy Policy compliance
+- Data protection measures
+
+## Getting Started
+
+### Prerequisites
 - Node.js (v14 or higher)
-- MongoDB
 - npm or yarn
+- MongoDB
+- Mixpanel account
 
-## Installation
+### Installation
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd compliance-management-system
+git clone https://github.com/yourusername/compliance-system.git
+cd compliance-system
 ```
 
-2. Install backend dependencies:
+2. Install dependencies:
 ```bash
+# Install server dependencies
 npm install
-```
 
-3. Install frontend dependencies:
-```bash
+# Install client dependencies
 cd client
 npm install
 ```
 
-4. Create a `.env` file in the root directory:
-```env
+3. Set up environment variables:
+```bash
+# Server .env
+MONGODB_URI=your_mongodb_uri
+NODE_ENV=development
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/compliance-system
-JWT_SECRET=your_jwt_secret
-CLIENT_URL=http://localhost:3000
+
+# Client .env
+REACT_APP_API_URL=http://localhost:5000
+REACT_APP_MIXPANEL_TOKEN=your_mixpanel_token
 ```
 
-5. Create a `.env` file in the client directory:
-```env
-REACT_APP_API_URL=http://localhost:5000/api
-```
-
-## Running the Application
-
-1. Start the backend server:
+4. Start the development servers:
 ```bash
-npm run dev
-```
+# Start server
+npm run server
 
-2. Start the frontend development server:
-```bash
+# Start client (in a new terminal)
 cd client
 npm start
 ```
 
-3. Access the application at `http://localhost:3000`
+## Deployment
 
-## Project Structure
+### Backend (Railway)
+1. Create a Railway account
+2. Connect your repository
+3. Set environment variables
+4. Deploy
 
-```
-compliance-management-system/
-├── client/                 # React frontend
-│   ├── public/
-│   └── src/
-│       ├── components/     # Reusable components
-│       ├── pages/         # Page components
-│       ├── services/      # API services
-│       └── utils/         # Utility functions
-├── server/                # Node.js backend
-│   ├── controllers/       # Route controllers
-│   ├── models/           # Database models
-│   ├── routes/           # API routes
-│   └── middleware/       # Custom middleware
-├── docs/                  # Documentation
-└── tests/                # Test files
-```
-
-## Security Features
-
-- JWT-based authentication
-- Password hashing with bcrypt
-- Rate limiting
-- CORS protection
-- Helmet security headers
-- Input validation
-- XSS protection
-- CSRF protection
-
-## Compliance Features
-
-- KDA requirements tracking
-- SEPA compliance monitoring
-- KW&SB requirements management
-- Document version control
-- Audit trail
-- Automated notifications
-- Compliance reporting
+### Frontend (Netlify)
+1. Create a Netlify account
+2. Connect your repository
+3. Set build settings:
+   - Build command: `cd client && npm run build`
+   - Publish directory: `client/build`
+4. Set environment variables
+5. Deploy
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Support
+## Contact
 
-For support, email support@compliance-system.com or create an issue in the repository. 
+Your Name - your.email@example.com
+Project Link: https://github.com/yourusername/compliance-system 

@@ -1,118 +1,200 @@
 import mixpanel from 'mixpanel-browser';
 
 // Initialize Mixpanel
-mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN || 'your_mixpanel_token', {
-  debug: process.env.NODE_ENV === 'development'
+mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN, {
+  debug: process.env.NODE_ENV === 'development',
+  track_pageview: true,
+  persistence: 'localStorage'
 });
 
-// Track page views
-export const trackPageView = (pageName) => {
-  mixpanel.track('Page View', {
-    page: pageName,
-    timestamp: new Date().toISOString()
-  });
-};
-
-// Track user actions
-export const trackUserAction = (actionName, properties = {}) => {
-  mixpanel.track(actionName, {
-    ...properties,
-    timestamp: new Date().toISOString()
-  });
-};
-
-// Track authentication events
-export const trackAuthEvent = (eventName, properties = {}) => {
-  mixpanel.track(eventName, {
-    ...properties,
-    timestamp: new Date().toISOString()
-  });
-};
-
-// Track compliance events
-export const trackComplianceEvent = (eventName, properties = {}) => {
-  mixpanel.track(eventName, {
-    ...properties,
-    timestamp: new Date().toISOString()
-  });
-};
-
-// Track document events
-export const trackDocumentEvent = (eventName, properties = {}) => {
-  mixpanel.track(eventName, {
-    ...properties,
-    timestamp: new Date().toISOString()
-  });
-};
-
-// Track report events
-export const trackReportEvent = (eventName, properties = {}) => {
-  mixpanel.track(eventName, {
-    ...properties,
-    timestamp: new Date().toISOString()
-  });
-};
-
-// Identify user
+// User Identification
 export const identifyUser = (userId, userProperties = {}) => {
   mixpanel.identify(userId);
-  mixpanel.people.set(userProperties);
+  mixpanel.people.set({
+    $email: userProperties.email,
+    $name: userProperties.name,
+    $company: userProperties.company,
+    $role: userProperties.role,
+    $created: new Date().toISOString(),
+    ...userProperties
+  });
+  trackUserAction('User Identified', userProperties);
 };
 
-// Reset user
-export const resetUser = () => {
-  mixpanel.reset();
+// Page Views
+export const trackPageView = (pageName, properties = {}) => {
+  mixpanel.track('Page View', {
+    page: pageName,
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
 };
 
-// Track form submissions
-export const trackFormSubmission = (formName, success, properties = {}) => {
-  mixpanel.track('Form Submission', {
+// User Actions
+export const trackUserAction = (actionName, properties = {}) => {
+  mixpanel.track(actionName, {
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Authentication Events
+export const trackAuthEvent = (eventName, properties = {}) => {
+  mixpanel.track(eventName, {
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Terms and Privacy Events
+export const trackTermsEvent = (eventName, properties = {}) => {
+  mixpanel.track(eventName, {
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Form Interactions
+export const trackFormInteraction = (formName, action, properties = {}) => {
+  mixpanel.track('Form Interaction', {
     form: formName,
-    success,
+    action,
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
     ...properties
   });
 };
 
-// Track errors
-export const trackError = (errorType, error, properties = {}) => {
-  mixpanel.track('Error', {
-    type: errorType,
-    message: error.message,
-    stack: error.stack,
+// Error Tracking
+export const trackError = (errorType, errorMessage, properties = {}) => {
+  mixpanel.track('Error Occurred', {
+    error_type: errorType,
+    error_message: errorMessage,
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
     ...properties
   });
 };
 
-// Track performance metrics
+// Performance Metrics
 export const trackPerformance = (metricName, value, properties = {}) => {
-  mixpanel.track('Performance', {
+  mixpanel.track('Performance Metric', {
     metric: metricName,
     value,
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
     ...properties
   });
 };
 
-// Track user session
-export const trackSession = (sessionData) => {
-  mixpanel.track('Session', {
-    ...sessionData,
+// Session Tracking
+export const trackSession = (action, properties = {}) => {
+  mixpanel.track('Session Event', {
+    action,
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+    ...properties
   });
 };
 
-// Track feature usage
-export const trackFeatureUsage = (featureName, properties = {}) => {
+// Feature Usage
+export const trackFeatureUsage = (featureName, action, properties = {}) => {
   mixpanel.track('Feature Usage', {
     feature: featureName,
+    action,
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
     ...properties
   });
-}; 
+};
+
+// User Journey
+export const trackUserJourney = (step, properties = {}) => {
+  mixpanel.track('User Journey', {
+    step,
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Search Analytics
+export const trackSearch = (query, results, properties = {}) => {
+  mixpanel.track('Search Performed', {
+    query,
+    results_count: results.length,
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Navigation Analytics
+export const trackNavigation = (from, to, properties = {}) => {
+  mixpanel.track('Navigation', {
+    from,
+    to,
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Time on Page
+export const trackTimeOnPage = (pageName, duration, properties = {}) => {
+  mixpanel.track('Time on Page', {
+    page: pageName,
+    duration,
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Scroll Depth
+export const trackScrollDepth = (pageName, depth, properties = {}) => {
+  mixpanel.track('Scroll Depth', {
+    page: pageName,
+    depth,
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Click Analytics
+export const trackClick = (elementName, properties = {}) => {
+  mixpanel.track('Element Clicked', {
+    element: elementName,
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Form Validation
+export const trackFormValidation = (formName, field, isValid, properties = {}) => {
+  mixpanel.track('Form Validation', {
+    form: formName,
+    field,
+    is_valid: isValid,
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Terms Acceptance
+export const trackTermsAcceptance = (version, properties = {}) => {
+  mixpanel.track('Terms Accepted', {
+    version,
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// User Preferences
+export const trackUserPreference = (preference, value, properties = {}) => {
+  mixpanel.track('User Preference Changed', {
+    preference,
+    value,
+    timestamp: new Date().toISOString(),
+    ...properties
+  });
+};
+
+// Reset User
+export const resetUser = () => {
+  mixpanel.reset();
+  trackUserAction('User Reset');
+};
+
+export default mixpanel; 

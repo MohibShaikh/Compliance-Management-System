@@ -184,11 +184,10 @@ const Login = ({ onLogin }) => {
             </Grid>
             <Grid item>
               <Link 
-                href="#" 
+                href="/register" 
                 variant="body2"
-                onClick={() => trackUserAction('Help Click')}
               >
-                Need help?
+                {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>
