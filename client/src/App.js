@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Navbar from './components/Navbar';
@@ -89,8 +89,9 @@ function App() {
                   <Navbar 
                     onMenuClick={toggleSidebar} 
                     onLogout={handleLogout}
+                    userData={userData}
                   />
-                  <Sidebar open={isSidebarOpen} onClose={toggleSidebar} />
+                  <Sidebar open={isSidebarOpen} onClose={toggleSidebar} userData={userData} />
                   <Box
                     component="main"
                     sx={{
@@ -105,10 +106,10 @@ function App() {
                     }}
                   >
                     <Routes>
-                      <Route path="/" element={<Dashboard />} />
-                      <Route path="/compliance" element={<Compliance />} />
-                      <Route path="/documents" element={<Documents />} />
-                      <Route path="/reports" element={<Reports />} />
+                      <Route path="/" element={<Dashboard userData={userData} />} />
+                      <Route path="/compliance" element={<Compliance userData={userData} />} />
+                      <Route path="/documents" element={<Documents userData={userData} />} />
+                      <Route path="/reports" element={<Reports userData={userData} />} />
                     </Routes>
                   </Box>
                 </div>
