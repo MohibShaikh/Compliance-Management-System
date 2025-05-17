@@ -27,25 +27,36 @@ const theme = createTheme({
 });
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('isAuthenticated') === 'true';
+  });
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState(() => {
+    const savedUserData = localStorage.getItem('userData');
+    return savedUserData ? JSON.parse(savedUserData) : null;
+  });
 
   const handleLogin = (userData) => {
     setIsAuthenticated(true);
     setUserData(userData);
+    localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('userData', JSON.stringify(userData));
     trackUserAction('User Login', { method: 'email', ...userData });
   };
 
   const handleRegister = (userData) => {
     setIsAuthenticated(true);
     setUserData(userData);
+    localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('userData', JSON.stringify(userData));
     trackUserAction('User Registration', { method: 'email', ...userData });
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
     setUserData(null);
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userData');
     trackUserAction('User Logout');
   };
 

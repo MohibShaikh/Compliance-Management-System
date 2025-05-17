@@ -97,41 +97,50 @@ const Register = ({ onRegister }) => {
         role: formData.role
       });
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, accept any valid registration
-      if (formData.email && formData.password) {
-        // Track successful registration
-        trackAuthEvent('Register Success', { 
-          email: formData.email,
-          company: formData.company,
-          role: formData.role,
-          termsAccepted: formData.acceptedTerms
-        });
-
-        // Pass user data to parent component
-        onRegister({
+      // Call registration API
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           name: formData.name,
           email: formData.email,
+          password: formData.password,
           company: formData.company,
-          role: formData.role
-        });
-      } else {
-        // Track failed registration
-        trackAuthEvent('Register Failed', { 
-          email: formData.email,
-          reason: 'Invalid data'
-        });
-        setRegisterError('Registration failed. Please try again.');
+          role: formData.role,
+          acceptedTerms: formData.acceptedTerms
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
       }
+
+      // Track successful registration
+      trackAuthEvent('Register Success', { 
+        email: formData.email,
+        company: formData.company,
+        role: formData.role,
+        termsAccepted: formData.acceptedTerms
+      });
+
+      // Store token and user data
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userData', JSON.stringify(data.user));
+      localStorage.setItem('isAuthenticated', 'true');
+
+      // Pass user data to parent component
+      onRegister(data.user);
     } catch (error) {
       // Track registration error
       trackAuthEvent('Register Error', { 
         email: formData.email,
         error: error.message
       });
-      setRegisterError('An error occurred. Please try again.');
+      setRegisterError(error.message || 'An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -305,7 +314,7 @@ const Register = ({ onRegister }) => {
             {loading ? <CircularProgress size={24} /> : 'Register'}
           </Button>
 
-          <Grid container justifyContent="center">
+          <Grid container justifyContent="flex-end">
             <Grid item>
               <Link href="/login" variant="body2">
                 Already have an account? Sign in
