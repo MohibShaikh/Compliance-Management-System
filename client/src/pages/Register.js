@@ -123,7 +123,8 @@ const Register = ({ onRegister }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Origin': window.location.origin
         },
         body: JSON.stringify(requestBody),
         mode: 'cors',
@@ -133,12 +134,13 @@ const Register = ({ onRegister }) => {
       console.log('Response status:', response.status);
       console.log('Response headers:', Object.fromEntries(response.headers.entries()));
       
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       console.log('Response data:', data);
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
 
       try {
         // Track successful registration
