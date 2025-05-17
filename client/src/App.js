@@ -13,7 +13,7 @@ import Register from './pages/Register';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import { Box } from '@mui/material';
-import { trackPageView } from './services/mixpanel';
+import { trackUserAction } from './services/mixpanel';
 
 const theme = createTheme({
   palette: {

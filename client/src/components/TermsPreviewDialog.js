@@ -13,15 +13,12 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  Divider,
   IconButton,
   Tooltip,
   TextField,
   InputAdornment
 } from '@mui/material';
 import {
-  NavigateNext as NavigateNextIcon,
-  NavigateBefore as NavigateBeforeIcon,
   Home as HomeIcon,
   Search as SearchIcon,
   Close as CloseIcon
