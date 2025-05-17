@@ -1,77 +1,109 @@
 import mixpanel from 'mixpanel-browser';
 
-// Initialize Mixpanel
-mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN, {
+// Initialize Mixpanel with your project token
+mixpanel.init('0d09f28858df', {
   debug: process.env.NODE_ENV === 'development',
   track_pageview: true,
   persistence: 'localStorage'
 });
 
-// User Identification
-export const identifyUser = (userId, userProperties = {}) => {
-  mixpanel.identify(userId);
-  mixpanel.people.set({
-    $email: userProperties.email,
-    $name: userProperties.name,
-    $company: userProperties.company,
-    $role: userProperties.role,
-    $created: new Date().toISOString(),
-    ...userProperties
-  });
-  trackUserAction('User Identified', userProperties);
-};
-
-// Page Views
+// Track page views
 export const trackPageView = (pageName, properties = {}) => {
-  mixpanel.track('Page View', {
-    page: pageName,
-    timestamp: new Date().toISOString(),
-    ...properties
-  });
+  try {
+    mixpanel.track('Page View', {
+      page: pageName,
+      timestamp: new Date().toISOString(),
+      ...properties
+    });
+  } catch (error) {
+    console.error('Mixpanel tracking error:', error);
+  }
 };
 
-// User Actions
+// Track user actions
 export const trackUserAction = (actionName, properties = {}) => {
-  mixpanel.track(actionName, {
-    timestamp: new Date().toISOString(),
-    ...properties
-  });
+  try {
+    mixpanel.track(actionName, {
+      timestamp: new Date().toISOString(),
+      ...properties
+    });
+  } catch (error) {
+    console.error('Mixpanel tracking error:', error);
+  }
 };
 
-// Authentication Events
+// Track authentication events
 export const trackAuthEvent = (eventName, properties = {}) => {
-  mixpanel.track(eventName, {
-    timestamp: new Date().toISOString(),
-    ...properties
-  });
+  try {
+    mixpanel.track(eventName, {
+      timestamp: new Date().toISOString(),
+      ...properties
+    });
+  } catch (error) {
+    console.error('Mixpanel tracking error:', error);
+  }
+};
+
+// Identify user
+export const identifyUser = (userId, userProperties = {}) => {
+  try {
+    mixpanel.identify(userId);
+    mixpanel.people.set({
+      ...userProperties,
+      $last_login: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Mixpanel identification error:', error);
+  }
+};
+
+// Reset user
+export const resetUser = () => {
+  try {
+    mixpanel.reset();
+  } catch (error) {
+    console.error('Mixpanel reset error:', error);
+  }
 };
 
 // Terms and Privacy Events
 export const trackTermsEvent = (eventName, properties = {}) => {
-  mixpanel.track(eventName, {
-    timestamp: new Date().toISOString(),
-    ...properties
-  });
+  try {
+    mixpanel.track(eventName, {
+      timestamp: new Date().toISOString(),
+      ...properties
+    });
+  } catch (error) {
+    console.error('Mixpanel tracking error:', error);
+  }
 };
 
 // Form Interactions
 export const trackFormInteraction = (formName, action, properties = {}) => {
-  mixpanel.track('Form Interaction', {
-    form: formName,
-    action,
-    timestamp: new Date().toISOString(),
-    ...properties
-  });
+  try {
+    mixpanel.track('Form Interaction', {
+      form: formName,
+      action,
+      timestamp: new Date().toISOString(),
+      ...properties
+    });
+  } catch (error) {
+    console.error('Mixpanel tracking error:', error);
+  }
 };
 
 // Error Tracking
 export const trackError = (errorType, errorMessage, properties = {}) => {
-  mixpanel.track('Error Occurred', {
-    error_type: errorType,
-    error_message: errorMessage,
-    timestamp: new Date().toISOString(),
-    ...properties
-  });
+  try {
+    mixpanel.track('Error Occurred', {
+      error_type: errorType,
+      error_message: errorMessage,
+      timestamp: new Date().toISOString(),
+      ...properties
+    });
+  } catch (error) {
+    console.error('Mixpanel tracking error:', error);
+  }
 };
 
 // Performance Metrics
@@ -189,12 +221,6 @@ export const trackUserPreference = (preference, value, properties = {}) => {
     timestamp: new Date().toISOString(),
     ...properties
   });
-};
-
-// Reset User
-export const resetUser = () => {
-  mixpanel.reset();
-  trackUserAction('User Reset');
 };
 
 export default mixpanel; 

@@ -37,11 +37,18 @@ const Register = ({ onRegister }) => {
       ...prev,
       [name]: e.target.type === 'checkbox' ? checked : value
     }));
-    // Track input changes
-    trackUserAction('Register Input Change', { 
-      field: name,
-      value: e.target.type === 'checkbox' ? checked : value
-    });
+    
+    try {
+      // Track input changes
+      trackUserAction('Register Input Change', { 
+        field: name,
+        value: e.target.type === 'checkbox' ? checked : value
+      });
+    } catch (trackingError) {
+      console.error('Analytics tracking error:', trackingError);
+      // Continue with form handling even if tracking fails
+    }
+    
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
@@ -85,15 +92,6 @@ const Register = ({ onRegister }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submitted');
-    
-    // Log all form data
-    console.log('Form Data:', {
-      name: formData.name,
-      email: formData.email,
-      company: formData.company,
-      role: formData.role,
-      acceptedTerms: formData.acceptedTerms
-    });
     
     if (!validateForm()) {
       console.log('Form validation failed', errors);
@@ -142,13 +140,18 @@ const Register = ({ onRegister }) => {
         throw new Error(data.message || 'Registration failed');
       }
 
-      // Track successful registration
-      trackAuthEvent('Register Success', { 
-        email: formData.email,
-        company: formData.company,
-        role: formData.role,
-        termsAccepted: formData.acceptedTerms
-      });
+      try {
+        // Track successful registration
+        trackAuthEvent('Register Success', { 
+          email: formData.email,
+          company: formData.company,
+          role: formData.role,
+          termsAccepted: formData.acceptedTerms
+        });
+      } catch (trackingError) {
+        console.error('Analytics tracking error:', trackingError);
+        // Continue with registration even if tracking fails
+      }
 
       // Store token and user data
       localStorage.setItem('token', data.token);
@@ -164,11 +167,18 @@ const Register = ({ onRegister }) => {
         message: error.message,
         stack: error.stack
       });
-      // Track registration error
-      trackAuthEvent('Register Error', { 
-        email: formData.email,
-        error: error.message
-      });
+      
+      try {
+        // Track registration error
+        trackAuthEvent('Register Error', { 
+          email: formData.email,
+          error: error.message
+        });
+      } catch (trackingError) {
+        console.error('Analytics tracking error:', trackingError);
+        // Continue with error handling even if tracking fails
+      }
+      
       setRegisterError(error.message || 'An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -177,14 +187,24 @@ const Register = ({ onRegister }) => {
 
   const handleTermsClick = (e) => {
     e.preventDefault();
-    trackUserAction('Terms Link Click', { source: 'Register Form' });
+    try {
+      trackUserAction('Terms Link Click', { source: 'Register Form' });
+    } catch (trackingError) {
+      console.error('Analytics tracking error:', trackingError);
+      // Continue with terms dialog even if tracking fails
+    }
     setShowTermsDialog(true);
   };
 
   const handleTermsAccept = () => {
     setFormData(prev => ({ ...prev, acceptedTerms: true }));
     setShowTermsDialog(false);
-    trackUserAction('Terms Accepted', { source: 'Preview Dialog' });
+    try {
+      trackUserAction('Terms Accepted', { source: 'Preview Dialog' });
+    } catch (trackingError) {
+      console.error('Analytics tracking error:', trackingError);
+      // Continue with terms acceptance even if tracking fails
+    }
   };
 
   return (
