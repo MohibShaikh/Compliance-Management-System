@@ -86,8 +86,17 @@ const Register = ({ onRegister }) => {
     e.preventDefault();
     console.log('Form submitted');
     
+    // Log all form data
+    console.log('Form Data:', {
+      name: formData.name,
+      email: formData.email,
+      company: formData.company,
+      role: formData.role,
+      acceptedTerms: formData.acceptedTerms
+    });
+    
     if (!validateForm()) {
-      console.log('Form validation failed');
+      console.log('Form validation failed', errors);
       return;
     }
 
@@ -95,41 +104,39 @@ const Register = ({ onRegister }) => {
     setRegisterError('');
 
     try {
-      console.log('Attempting registration with data:', {
-        ...formData,
-        password: '***' // Don't log actual password
-      });
-
-      // Track registration attempt
-      trackAuthEvent('Register Attempt', { 
-        email: formData.email,
-        company: formData.company,
-        role: formData.role
-      });
-      
       // Use Railway production API URL
       const apiUrl = 'https://compliance-management-system-production.up.railway.app';
-      console.log('Using API URL:', apiUrl);
+      const endpoint = `${apiUrl}/api/auth/register`;
+      console.log('Making API call to:', endpoint);
+      
+      // Prepare request body
+      const requestBody = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        company: formData.company,
+        role: formData.role,
+        acceptedTerms: formData.acceptedTerms
+      };
+      console.log('Request body:', { ...requestBody, password: '***' });
       
       // Call registration API
-      const response = await fetch(`${apiUrl}/api/auth/register`, {
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          company: formData.company,
-          role: formData.role,
-          acceptedTerms: formData.acceptedTerms
-        }),
+        body: JSON.stringify(requestBody),
+        mode: 'cors',
+        credentials: 'include'
       });
 
-      console.log('Registration response status:', response.status);
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      
       const data = await response.json();
-      console.log('Registration response data:', data);
+      console.log('Response data:', data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Registration failed');
@@ -153,6 +160,10 @@ const Register = ({ onRegister }) => {
       onRegister(data.user);
     } catch (error) {
       console.error('Registration error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack
+      });
       // Track registration error
       trackAuthEvent('Register Error', { 
         email: formData.email,
@@ -213,7 +224,12 @@ const Register = ({ onRegister }) => {
           </Alert>
         )}
 
-        <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+        <Box 
+          component="form" 
+          onSubmit={handleSubmit} 
+          sx={{ width: '100%' }}
+          noValidate
+        >
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -225,6 +241,7 @@ const Register = ({ onRegister }) => {
                 onChange={handleChange}
                 error={!!errors.name}
                 helperText={errors.name}
+                autoComplete="name"
               />
             </Grid>
             <Grid item xs={12}>
@@ -238,6 +255,7 @@ const Register = ({ onRegister }) => {
                 onChange={handleChange}
                 error={!!errors.email}
                 helperText={errors.email}
+                autoComplete="email"
               />
             </Grid>
             <Grid item xs={12}>
@@ -251,6 +269,7 @@ const Register = ({ onRegister }) => {
                 onChange={handleChange}
                 error={!!errors.password}
                 helperText={errors.password}
+                autoComplete="new-password"
               />
             </Grid>
             <Grid item xs={12}>
@@ -264,6 +283,7 @@ const Register = ({ onRegister }) => {
                 onChange={handleChange}
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword}
+                autoComplete="new-password"
               />
             </Grid>
             <Grid item xs={12}>
@@ -276,6 +296,7 @@ const Register = ({ onRegister }) => {
                 onChange={handleChange}
                 error={!!errors.company}
                 helperText={errors.company}
+                autoComplete="organization"
               />
             </Grid>
             <Grid item xs={12}>
@@ -288,6 +309,7 @@ const Register = ({ onRegister }) => {
                 onChange={handleChange}
                 error={!!errors.role}
                 helperText={errors.role}
+                autoComplete="organization-title"
               />
             </Grid>
             <Grid item xs={12}>

@@ -55,11 +55,10 @@ app.get('/api/health', async (req, res) => {
 app.use(express.json());
 app.use(helmet());
 app.use(cors({
-  origin: [
-    process.env.CLIENT_URL || 'http://localhost:3000',
-    'https://compliance-management-system-production.up.railway.app'
-  ],
-  credentials: true
+  origin: '*', // Allow all origins for now
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
 
 // Rate limiting
