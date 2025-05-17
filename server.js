@@ -78,7 +78,7 @@ const connectDB = async () => {
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/compliance-system', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 30000, // Increased timeout
       socketTimeoutMS: 45000,
     });
     console.log('Successfully connected to MongoDB');
