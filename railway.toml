@@ -5,7 +5,8 @@ buildCommand = "npm install"
 [deploy]
 startCommand = "npm start"
 healthcheckPath = "/api/health"
-healthcheckTimeout = 100
+healthcheckTimeout = 300
+restartPolicy = "on-failure"
 
 [env]
 NODE_ENV = "production"
