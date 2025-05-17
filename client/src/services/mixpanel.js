@@ -1,59 +1,67 @@
 import mixpanel from 'mixpanel-browser';
 
 // Initialize Mixpanel
-mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN, {
-  debug: process.env.NODE_ENV === 'development',
-  track_pageview: true,
-  persistence: 'localStorage'
+mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN || 'your_mixpanel_token', {
+  debug: process.env.NODE_ENV === 'development'
 });
 
-// Track page views with additional data
-export const trackPageView = (pageName, properties = {}) => {
+// Track page views
+export const trackPageView = (pageName) => {
   mixpanel.track('Page View', {
     page: pageName,
-    timestamp: new Date().toISOString(),
-    ...properties
+    timestamp: new Date().toISOString()
   });
 };
 
-// Track user actions with detailed properties
+// Track user actions
 export const trackUserAction = (actionName, properties = {}) => {
   mixpanel.track(actionName, {
     ...properties,
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+    timestamp: new Date().toISOString()
   });
 };
 
-// Track compliance events with specific data
-export const trackComplianceEvent = (eventType, data) => {
-  mixpanel.track('Compliance Event', {
-    type: eventType,
-    ...data,
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+// Track authentication events
+export const trackAuthEvent = (eventName, properties = {}) => {
+  mixpanel.track(eventName, {
+    ...properties,
+    timestamp: new Date().toISOString()
+  });
+};
+
+// Track compliance events
+export const trackComplianceEvent = (eventName, properties = {}) => {
+  mixpanel.track(eventName, {
+    ...properties,
+    timestamp: new Date().toISOString()
   });
 };
 
 // Track document events
-export const trackDocumentEvent = (eventType, data) => {
-  mixpanel.track('Document Event', {
-    type: eventType,
-    ...data,
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+export const trackDocumentEvent = (eventName, properties = {}) => {
+  mixpanel.track(eventName, {
+    ...properties,
+    timestamp: new Date().toISOString()
   });
 };
 
-// Track user authentication with detailed properties
-export const trackAuthEvent = (eventType, userId, properties = {}) => {
-  mixpanel.track('Authentication', {
-    type: eventType,
-    userId,
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    ...properties
+// Track report events
+export const trackReportEvent = (eventName, properties = {}) => {
+  mixpanel.track(eventName, {
+    ...properties,
+    timestamp: new Date().toISOString()
   });
+};
+
+// Identify user
+export const identifyUser = (userId, userProperties = {}) => {
+  mixpanel.identify(userId);
+  mixpanel.people.set(userProperties);
+};
+
+// Reset user
+export const resetUser = () => {
+  mixpanel.reset();
 };
 
 // Track form submissions
@@ -90,19 +98,6 @@ export const trackPerformance = (metricName, value, properties = {}) => {
   });
 };
 
-// Identify user with detailed properties
-export const identifyUser = (userId, userProperties) => {
-  mixpanel.identify(userId);
-  mixpanel.people.set({
-    $email: userProperties.email,
-    $name: userProperties.name,
-    $created: new Date().toISOString(),
-    $last_login: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    ...userProperties
-  });
-};
-
 // Track user session
 export const trackSession = (sessionData) => {
   mixpanel.track('Session', {
@@ -110,11 +105,6 @@ export const trackSession = (sessionData) => {
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV
   });
-};
-
-// Reset user
-export const resetUser = () => {
-  mixpanel.reset();
 };
 
 // Track feature usage
