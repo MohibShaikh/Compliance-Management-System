@@ -84,12 +84,22 @@ const Register = ({ onRegister }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    console.log('Form submitted');
+    
+    if (!validateForm()) {
+      console.log('Form validation failed');
+      return;
+    }
 
     setLoading(true);
     setRegisterError('');
 
     try {
+      console.log('Attempting registration with data:', {
+        ...formData,
+        password: '***' // Don't log actual password
+      });
+
       // Track registration attempt
       trackAuthEvent('Register Attempt', { 
         email: formData.email,
@@ -97,8 +107,12 @@ const Register = ({ onRegister }) => {
         role: formData.role
       });
       
+      // Use Railway production API URL
+      const apiUrl = 'https://compliance-management-system-production.up.railway.app';
+      console.log('Using API URL:', apiUrl);
+      
       // Call registration API
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
+      const response = await fetch(`${apiUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +127,9 @@ const Register = ({ onRegister }) => {
         }),
       });
 
+      console.log('Registration response status:', response.status);
       const data = await response.json();
+      console.log('Registration response data:', data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Registration failed');
@@ -132,9 +148,11 @@ const Register = ({ onRegister }) => {
       localStorage.setItem('userData', JSON.stringify(data.user));
       localStorage.setItem('isAuthenticated', 'true');
 
+      console.log('Registration successful, calling onRegister');
       // Pass user data to parent component
       onRegister(data.user);
     } catch (error) {
+      console.error('Registration error:', error);
       // Track registration error
       trackAuthEvent('Register Error', { 
         email: formData.email,
