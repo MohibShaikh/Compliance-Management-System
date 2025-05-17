@@ -32,18 +32,22 @@ function App() {
 
   const handleLogin = () => {
     setIsAuthenticated(true);
+    trackUserAction('User Login', { method: 'email' });
   };
 
   const handleRegister = () => {
     setIsAuthenticated(true);
+    trackUserAction('User Registration', { method: 'email' });
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    trackUserAction('User Logout');
   };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+    trackUserAction('Sidebar Toggle', { state: !isSidebarOpen });
   };
 
   return (
