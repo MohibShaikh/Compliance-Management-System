@@ -269,12 +269,13 @@ const Register = ({ onRegister }) => {
                 label={
                   <Typography variant="body2">
                     I accept the{' '}
-                    <Link href="#" onClick={handleTermsClick}>
+                    <Link
+                      component="button"
+                      variant="body2"
+                      onClick={handleTermsClick}
+                      sx={{ textDecoration: 'none' }}
+                    >
                       Terms of Service
-                    </Link>
-                    {' '}and{' '}
-                    <Link href="#" onClick={handleTermsClick}>
-                      Privacy Policy
                     </Link>
                   </Typography>
                 }
