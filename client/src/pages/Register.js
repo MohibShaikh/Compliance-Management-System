@@ -109,7 +109,14 @@ const Register = ({ onRegister }) => {
           role: formData.role,
           termsAccepted: formData.acceptedTerms
         });
-        onRegister();
+
+        // Pass user data to parent component
+        onRegister({
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          role: formData.role
+        });
       } else {
         // Track failed registration
         trackAuthEvent('Register Failed', { 

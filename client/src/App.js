@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Navbar from './components/Navbar';
@@ -29,19 +29,23 @@ const theme = createTheme({
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [userData, setUserData] = useState(null);
 
-  const handleLogin = () => {
+  const handleLogin = (userData) => {
     setIsAuthenticated(true);
-    trackUserAction('User Login', { method: 'email' });
+    setUserData(userData);
+    trackUserAction('User Login', { method: 'email', ...userData });
   };
 
-  const handleRegister = () => {
+  const handleRegister = (userData) => {
     setIsAuthenticated(true);
-    trackUserAction('User Registration', { method: 'email' });
+    setUserData(userData);
+    trackUserAction('User Registration', { method: 'email', ...userData });
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    setUserData(null);
     trackUserAction('User Logout');
   };
 
